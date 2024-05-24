@@ -16,6 +16,11 @@ const betSchema = new mongoose.Schema({
         required: true,
         enum: ['active', 'settled'],
         default: 'active'
+    },
+    betAmount: {
+        type: Number,
+        required: true,
+        min: 1
     }
 }, { timestamps: true });
 
