@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const bankSchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
     accountNumber: {
         type: String,
         required: true,

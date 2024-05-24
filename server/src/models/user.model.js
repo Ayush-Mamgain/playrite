@@ -30,7 +30,19 @@ const userSchema = new mongoose.Schema({
     },
     token: {
         type: String
-    }
+    },
+    transactions: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Transaction'
+        }
+    ],
+    bets: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Bet'
+        }
+    ]
 }, { timestamps: true });
 
 userSchema.pre('save', async function (next) {
