@@ -20,7 +20,8 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     bank: {
-        type: mongoose.Schema.Types.ObjectId
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Bank'
     },
     role: {
         type: String,
