@@ -3,7 +3,7 @@ const ApiError = require("../utils/ApiError");
 const jwt = require('jsonwebtoken');
 const asyncHandler = require('../utils/asyncHandler');
 
-//AuthN
+//AuthN --> to check whether the user is logged in or not because then only he would be able to access the user routes
 const auth = asyncHandler(async (req, res, next) => {
     //get the token from user
     const token = req.cookies?.token || req.body?.token || req.header('Authorization')?.replace('Bearer ','');

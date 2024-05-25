@@ -26,7 +26,7 @@ app.use(express.static('public'));
 app.use(cookieParser());
 
 //setup default route
-app.get('/', (req, res) => res.send('Welcome to charity finder'));
+app.get('/', (req, res) => res.send('Welcome to Play rite'));
 
 //mount API routes on the app
 
