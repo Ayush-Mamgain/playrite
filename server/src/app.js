@@ -29,5 +29,16 @@ app.use(cookieParser());
 app.get('/', (req, res) => res.send('Welcome to Play rite'));
 
 //mount API routes on the app
+//otp routes
+const otpRouter = require('./routes/otp.routes');
+app.use('/otp',otpRouter);
+
+//auth router
+const authRouter = require('./routes/auth.routes');
+app.use('/auth', authRouter);
+
+//user router
+const userRouter = require('./routes/user.routes');
+app.use('/user',userRouter);
 
 module.exports = app;
