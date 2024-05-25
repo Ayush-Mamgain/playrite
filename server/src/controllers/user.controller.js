@@ -1,7 +1,7 @@
 const User = require('../models/user.model');
 const asyncHandler = require('../utils/asyncHandler');
-const ApiError = require('../utils/ApiError');
-const ApiResponse = require('../utils/ApiResponse');
+const ApiError = require('../utils/apiError');
+const ApiResponse = require('../utils/apiResponse');
 
 const registerUser = asyncHandler(async (req, res) => {
     // Get the user details from the request
