@@ -20,7 +20,8 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     bank: {
-        type: mongoose.Schema.Types.ObjectId
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Bank'
     },
     role: {
         type: String,
@@ -62,7 +63,7 @@ userSchema.methods.isPasswordCorrect = async function (password) {
     return await bcrypt.compare(password, this.password);
 } //this method will be used when user logs in!
 
-userSchema.methods.generateToken = async function () {
+userSchema.methods.generateToken =  () => {
     return jwt.sign(
         {
             _id: this._id,
