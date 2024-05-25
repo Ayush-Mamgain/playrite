@@ -2,7 +2,7 @@ const otpGenerator = require('otp-generator');
 const Otp = require('../models/otp.model');
 const asyncHandler = require('../utils/asyncHandler');
 const User = require('../models/user.model');
-const ApiError = require('../utils/ApiError');
+const ApiError = require('../utils/apiError');
 const ApiResponse = require('../utils/apiResponse');
 
 const sendOtp = asyncHandler(async function (request, res) {

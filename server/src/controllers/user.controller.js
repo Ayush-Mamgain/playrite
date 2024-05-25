@@ -12,12 +12,8 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, 'All fields are required');
     }
 
-    // Validate email format (simple regex)
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        throw new ApiError(400, 'Invalid email format');
-    }
-
+    // Email format can be verified using regex
+    
     // Check if user already exists
     if (await User.findOne({ email })) {
         throw new ApiError(409, 'User already exists');
