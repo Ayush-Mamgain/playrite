@@ -41,4 +41,8 @@ app.use('/api/auth', authRouter);
 const userRouter = require('./routes/user.routes');
 app.use('/api/user',userRouter);
 
+//battle router
+const battleRouter = require('./routes/battle.routes');
+app.use('/api/battle', battleRouter);
+
 module.exports = app;
