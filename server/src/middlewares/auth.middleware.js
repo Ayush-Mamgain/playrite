@@ -7,6 +7,8 @@ const asyncHandler = require('../utils/asyncHandler');
 const auth = asyncHandler(async (req, res, next) => {
     //get the token from user
     const token = req.cookies?.token || req.body?.token || req.header('Authorization')?.replace('Bearer ','');
+    
+    console.log("raw token:\n",token); /////////
 
     //validate the token
     if(!token)
@@ -15,7 +17,9 @@ const auth = asyncHandler(async (req, res, next) => {
     //decode the token
     let decodedToken;
     try {
-        decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
+        decodedToken = await jwt.verify(token, process.env.TOKEN_SECRET);
+
+        console.log("decoded token:\n", decodedToken); ///////
     } catch(error) {
         console.error('Error in verifying token\n',error);
         throw new ApiError(401, 'Invalid Token', error);
@@ -23,6 +27,8 @@ const auth = asyncHandler(async (req, res, next) => {
 
     //get the user from DB
     const user = await User.findById(decodedToken._id).select('-password');
+
+    console.log(user); ///////////////
 
     //verify the token
     if(!user) 

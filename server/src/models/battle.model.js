@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const battleSchema = new mongoose.Schema({
+    organiser: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
     players: [
         {
             type: mongoose.Schema.Types.ObjectId,

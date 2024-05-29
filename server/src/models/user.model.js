@@ -70,7 +70,10 @@ userSchema.methods.isPasswordCorrect = async function (password) {
     return await bcrypt.compare(password, this.password);
 } //this method will be used when user logs in!
 
-userSchema.methods.generateToken =  () => {
+userSchema.methods.generateToken = function() {
+    console.log('Printing user id and email');
+    console.log(this._id);
+    console.log(this.email);
     return jwt.sign(
         {
             _id: this._id,
@@ -82,5 +85,6 @@ userSchema.methods.generateToken =  () => {
         }
     );
 }
+
 const User = mongoose.model('User', userSchema);
 module.exports = User;

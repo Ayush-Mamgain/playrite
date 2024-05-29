@@ -17,6 +17,7 @@ const createBattle = asyncHandler(async (req, res, next) => {
     const createdBattle = await Battle.create({
         players: [],
         battleAmount,
+        organiser: req.user._id
     });
     if (!createdBattle) {
         throw new ApiError(401, 'Error in creating new battle');
