@@ -35,19 +35,25 @@ const placeBet = asyncHandler(async (req, res) => {
         throw new ApiError(400, 'Invalid bet amount, outside of range');
     }
 
+    //check if user has sufficient amount in it's wallet
+    const better = await User.findById(req.user._id);
+    if(better.wallet < betAmount) {
+        throw new ApiError(400, 'Insufficient wallet amount');
+    }
+
     // Place the bet (atomic operations should be considered)
     player.playerAmount += betAmount;
     await player.save();
 
     // Create a new bet for the user
     const bet = await Bet.create({
-        user: req.user._id,
+        user: better._id,
         battle: battle._id,
         betAmount
     });
 
     // Push the bet to the user
-    await User.findByIdAndUpdate(req.user._id, {
+    await User.findByIdAndUpdate(better._id, {
         $inc: {
             wallet: -betAmount
         },
@@ -59,8 +65,8 @@ const placeBet = asyncHandler(async (req, res) => {
     // Return successful response along with bet
     return res.status(201).json(new ApiResponse(
         201,
-        'Bet placed successfully',
-        bet
+        bet,
+        'Bet placed successfully'
     ));
 });
 
