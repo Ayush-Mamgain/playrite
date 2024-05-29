@@ -45,4 +45,8 @@ app.use('/api/user',userRouter);
 const battleRouter = require('./routes/battle.routes');
 app.use('/api/battle', battleRouter);
 
+//bet router
+const betRouter = require('./routes/bet.routes');
+app.use('/api/bet', betRouter);
+
 module.exports = app;
