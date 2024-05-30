@@ -1,4 +1,5 @@
 const User = require('../models/user.model');
+const Battle = require('../models/battle.model');
 const asyncHandler = require('../utils/asyncHandler');
 const ApiError = require('../utils/apiError');
 const ApiResponse = require('../utils/apiResponse');
@@ -101,7 +102,7 @@ const getAllBets = asyncHandler(async (req,res) => {
     //get the user id and validate
     const userId = req.user._id;
     if(!userId) {
-        throw new ApiError(404, 'User id not found');
+        throw new ApiError(400, 'User id not found');
     }
 
     //get the user from DB and validate
@@ -132,4 +133,30 @@ const getAllBets = asyncHandler(async (req,res) => {
     ));
 });
 
-module.exports = { registerUser, loginUser, logoutUser, getAllBets };
+const getBattleStatus = asyncHandler(async (req, res) => {
+    //get battle id from request parameters
+    const { battleId } = req.params;
+    if(!battleId) {
+        throw new ApiError(400, 'Battle ID not found in request');
+    }
+
+    //get the battle from DB
+    const battle = await Battle.findById(battleId).populate('result'); //if the result is null populate() won't throw an error
+    if(!battle) {
+        throw new ApiError(404, 'Battle not found');
+    }
+
+    //return battle status and winner
+    const battleInfo = {
+        status: battle.status,
+        result: battle.result
+    }
+
+    return res.status(200).json(new ApiResponse(
+        200,
+        battleInfo,
+        'Battle info fetched successfully'
+    ));
+});
+
+module.exports = { registerUser, loginUser, logoutUser, getAllBets, getBattleStatus };
