@@ -2,6 +2,7 @@ const User = require('../models/user.model');
 const asyncHandler = require('../utils/asyncHandler');
 const ApiError = require('../utils/apiError');
 const ApiResponse = require('../utils/apiResponse');
+const Bet = require('../models/bet.model');
 
 const registerUser = asyncHandler(async (req, res) => {
     // Get the user details from the request
@@ -96,4 +97,39 @@ const logoutUser = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, {}, 'User logged out successfully'));
 });
 
-module.exports = { registerUser, loginUser, logoutUser };
+const getAllBets = asyncHandler(async (req,res) => {
+    //get the user id and validate
+    const userId = req.user._id;
+    if(!userId) {
+        throw new ApiError(404, 'User id not found');
+    }
+
+    //get the user from DB and validate
+    const user = await User.findById(userId);
+    if(!user) {
+        throw new ApiError(404, 'User corresponding top ID not found');
+    }
+
+    //retreive all the bets of user with proper population and validate
+    const userBets = await Bet.find({
+        _id: { $in: user.bets }
+    }).populate({
+        path: 'battle',
+        populate: {
+            path: 'players'
+        }
+    }).populate('player');
+    //another optimal method: Promise.all --> concurrent fetching
+    if(userBets.length === 0) {
+        throw new ApiError(404, 'No bets found');
+    }
+
+    //return response
+    return res.status(200).json(new ApiResponse(
+        200,
+        userBets,
+        'All bets of user fetched successfully'
+    ));
+});
+
+module.exports = { registerUser, loginUser, logoutUser, getAllBets };
