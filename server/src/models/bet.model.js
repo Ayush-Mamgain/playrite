@@ -11,6 +11,11 @@ const betSchema = new mongoose.Schema({
         ref: 'Battle',
         required: true
     },
+    player: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Player',
+        required: true
+    },
     status: {
         type: String,
         required: true,
@@ -21,6 +26,9 @@ const betSchema = new mongoose.Schema({
         type: Number,
         required: true,
         min: 1
+    },
+    payout: {
+        type: Number,
     }
 }, { timestamps: true });
 
