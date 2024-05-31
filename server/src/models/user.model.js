@@ -26,10 +26,12 @@ const userSchema = new mongoose.Schema({
         default: 0,
         required: true
     },
-    bank: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Bank'
-    },
+    banks: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Bank'
+        }
+    ],
     role: {
         type: String,
         enum: ['user', 'admin'],

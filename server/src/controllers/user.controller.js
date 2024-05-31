@@ -4,6 +4,7 @@ const asyncHandler = require('../utils/asyncHandler');
 const ApiError = require('../utils/apiError');
 const ApiResponse = require('../utils/apiResponse');
 const Bet = require('../models/bet.model');
+const Bank = require('../models/bank.model');
 
 const registerUser = asyncHandler(async (req, res) => {
     // Get the user details from the request
@@ -159,4 +160,27 @@ const getBattleStatus = asyncHandler(async (req, res) => {
     ));
 });
 
-module.exports = { registerUser, loginUser, logoutUser, getAllBets, getBattleStatus };
+const getUserInfo = asyncHandler(async (req, res) => {
+    //no need to touch request body, user id will be provided through auth MW
+    const { user } = req;
+    const userId = user && user._id;
+    if(!userId) {
+        throw new ApiError(400, 'User id not found');
+    }
+
+    //get the user and validate
+    const userInfo = await User.findById(userId).select('-password');
+    //populate the required fields after frontend
+    if(!userInfo) {
+        throw new ApiError(404, 'User not found');
+    }
+
+    //return the response
+    return res.status(200).json(new ApiResponse(
+        200,
+        userInfo,
+        'User info fetched successfully'
+    ));
+});
+
+module.exports = { registerUser, loginUser, logoutUser, getAllBets, getBattleStatus, getUserInfo };
