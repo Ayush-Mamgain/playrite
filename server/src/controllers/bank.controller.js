@@ -19,10 +19,7 @@ const registerBank = asyncHandler(async (req, res) => {
     }
 
     const user = await User.findById(req.user._id);
-    if (!user) {
-        throw new ApiError(404, 'User not found');
-    }
-
+    
     //create contact
     let contactId;
     const contactData = {

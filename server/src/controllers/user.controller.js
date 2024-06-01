@@ -106,11 +106,8 @@ const getAllBets = asyncHandler(async (req,res) => {
         throw new ApiError(400, 'User id not found');
     }
 
-    //get the user from DB and validate
+    //get the user from DB (no need to validate because middleware has already done that)
     const user = await User.findById(userId);
-    if(!user) {
-        throw new ApiError(404, 'User corresponding top ID not found');
-    }
 
     //retreive all the bets of user with proper population and validate
     const userBets = await Bet.find({

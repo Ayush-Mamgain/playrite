@@ -5,6 +5,8 @@ const ApiResponse = require('../utils/apiResponse');
 const crypto = require('crypto');
 const razorpay = require('../utils/razorpay');
 const User = require('../models/user.model');
+const Bank = require('../models/bank.model');
+const mongoose = require('mongoose');
 
 const createDepositOrder = asyncHandler(async (req, res) => {
     //get the details and validate
@@ -110,4 +112,63 @@ const depositErrorCallback = asyncHandler(async(req, res) => {
     ));
 });
 
-module.exports = { createDepositOrder, depositCallback, depositErrorCallback }
+//test withdraw controller for client side (until I figure out a solution for razorpay)
+//deposit will work out in test mode as usual
+const testWithdraw = asyncHandler(async (req, res) => {
+    //get the details from request
+    const { amount, bankId } = req.body;
+    if(!amount || !bankId) {
+        throw new ApiError(400, 'Bank id or amount not found');
+    }
+
+    //get the Bank
+    const bank = await Bank.findById(bankId);
+    if(!bank) {
+        throw new ApiError(404, 'Bank not found');
+    }
+
+    //get the user
+    const user = await User.findById(req.user._id);
+
+    //validate if the bank is linked with the user
+    if(!bank.user.equals(user._id)) {
+        throw new ApiError(401, 'Bank not linked with the user');
+    }
+
+    //validate the amount
+    if(amount > user.wallet) {
+        throw new ApiError(400, 'Insufficient balance in user wallet');
+    }
+
+    //make the transaction
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    //session is done so that creation of transaction and deduction from user wallet happens atomically
+    let withdrawal;
+    try {
+        withdrawal = await Transaction.create([{
+            user: user._id,
+            amount,
+            type: 'withdrawal',
+            status: 'completed'
+        }], { session });
+
+        user.wallet -= amount;
+        await user.save({ session });
+
+        await session.commitTransaction();
+        session.endSession();
+    } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
+        throw new ApiError(500, 'Transaction failed', error);
+    }
+
+    return res.status(201).json(new ApiResponse(
+        201,
+        withdrawal,
+        'Withdrawal completed successfully'
+    ));
+});
+
+module.exports = { createDepositOrder, depositCallback, depositErrorCallback, testWithdraw }
