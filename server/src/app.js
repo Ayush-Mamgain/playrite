@@ -53,4 +53,8 @@ app.use('/api/bet', betRouter);
 const bankRouter = require('./routes/bank.routes');
 app.use('/api/bank', bankRouter);
 
+//transaction router
+const transactionRouter = require('./routes/transaction.routes');
+app.use('/api/transaction', transactionRouter);
+
 module.exports = app;
