@@ -21,6 +21,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    contact: {
+        type: String,
+        required: true,
+        maxLength: 10
+    },
     wallet: {
         type: Number,
         default: 0,
