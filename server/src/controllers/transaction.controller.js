@@ -4,8 +4,9 @@ const ApiError = require('../utils/apiError');
 const ApiResponse = require('../utils/apiResponse');
 const crypto = require('crypto');
 const razorpay = require('../utils/razorpay');
+const User = require('../models/user.model');
 
-const createPaymentOrder = asyncHandler(async (req, res) => {
+const createDepositOrder = asyncHandler(async (req, res) => {
     //get the details and validate
     const { amount, currency } = req.body;
     if (!amount || isNaN(amount) || amount <= 0) {
@@ -36,7 +37,7 @@ const createPaymentOrder = asyncHandler(async (req, res) => {
 });
 
 //this will be called after successful payment
-const paymentCallback = asyncHandler(async (req, res) => {
+const depositCallback = asyncHandler(async (req, res) => {
     //verify the payment
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
 
@@ -53,7 +54,7 @@ const paymentCallback = asyncHandler(async (req, res) => {
 
     //get the payment details
     const paymentDetails = await razorpay.payments.fetch(razorpay_payment_id);
-    console.log(paymentDetails); //////////////
+    console.log(paymentDetails); ///////////////////////
 
     //create the transaction
     const deposit = await Transaction.create({
@@ -63,6 +64,13 @@ const paymentCallback = asyncHandler(async (req, res) => {
         status: 'completed'
     });
     
+    //push the transaction in the user
+    const updatedUser = await User.findByIdAndUpdate(req.user._id, {
+        $push: {
+            transactions: deposit._id
+        }
+    });
+
     //return the response
     return res.status(200).json(new ApiResponse(
         201,
@@ -71,4 +79,35 @@ const paymentCallback = asyncHandler(async (req, res) => {
     ));
 });
 
-module.exports = { createPaymentOrder, paymentCallback }
+const depositErrorCallback = asyncHandler(async(req, res) => {
+    //get error from request
+    const { depositError } = req.body;
+    if(!depositError) {
+        throw new ApiError(400, 'Deposit Error not found');
+    }
+    console.log(depositError); ////////////////////////////////
+
+    //create a failed deposit transaction
+    const failedDeposit = await Transaction.create({
+        user: req.user._id,
+        type: 'deposit',
+        amount: paymentDetails.amount, //might do amount*100 or amount/100
+        status: 'failed'
+    });
+    
+    //push the transaction into user
+    const updatedUser = await User.findByIdAndUpdate(req.user._id, {
+        $push: {
+            transactions: failedDeposit._id
+        }
+    });
+
+    //return the response (no need to return the error because it will come from razorpay API directly to client side)
+    return res.status(200).json(new ApiResponse(
+        201,
+        failedDeposit,
+        'Deposit failed'
+    ));
+});
+
+module.exports = { createDepositOrder, depositCallback, depositErrorCallback }
