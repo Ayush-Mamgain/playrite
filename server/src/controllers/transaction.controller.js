@@ -140,20 +140,23 @@ const testWithdraw = asyncHandler(async (req, res) => {
         throw new ApiError(400, 'Insufficient balance in user wallet');
     }
 
-    //make the transaction
+    //session is done so that creation of transaction and deduction from user wallet happens atomically
     const session = await mongoose.startSession();
     session.startTransaction();
-    //session is done so that creation of transaction and deduction from user wallet happens atomically
     let withdrawal;
     try {
+        //create the transaction
         withdrawal = await Transaction.create([{
             user: user._id,
             amount,
             type: 'withdrawal',
             status: 'completed'
         }], { session });
+        //this time it would return an array because we passed an array
 
+        //update user wallet and it's transactions
         user.wallet -= amount;
+        user.transactions.push(withdrawal[0]._id);
         await user.save({ session });
 
         await session.commitTransaction();
@@ -166,7 +169,7 @@ const testWithdraw = asyncHandler(async (req, res) => {
 
     return res.status(201).json(new ApiResponse(
         201,
-        withdrawal,
+        withdrawal[0],
         'Withdrawal completed successfully'
     ));
 });

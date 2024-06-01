@@ -5,6 +5,7 @@ const ApiError = require('../utils/apiError');
 const ApiResponse = require('../utils/apiResponse');
 const Bet = require('../models/bet.model');
 const Bank = require('../models/bank.model');
+const Transaction = require('../models/transaction.model');
 
 const registerUser = asyncHandler(async (req, res) => {
     // Get the user details from the request
@@ -119,9 +120,9 @@ const getAllBets = asyncHandler(async (req,res) => {
         }
     }).populate('player');
     //another optimal method: Promise.all --> concurrent fetching
-    if(userBets.length === 0) {
-        throw new ApiError(404, 'No bets found');
-    }
+    // if(userBets.length === 0) {
+    //     throw new ApiError(404, 'No bets found');
+    // } --> it is possible that user hasn't placed any bet
 
     //return response
     return res.status(200).json(new ApiResponse(
@@ -180,4 +181,21 @@ const getUserInfo = asyncHandler(async (req, res) => {
     ));
 });
 
-module.exports = { registerUser, loginUser, logoutUser, getAllBets, getBattleStatus, getUserInfo };
+const getAllTransactions = asyncHandler(async(req, res) => {
+    //get the user
+    const user = await User.findById(req.user._id);
+
+    //get all it's transactions
+    const transactions = await Transaction.find({
+        _id: { $in: user.transactions }
+    });
+
+    //return successful response
+    return res.status(200).json(new ApiResponse(
+        200,
+        transactions,
+        'All transactions fetched successfully'
+    ));
+});
+
+module.exports = { registerUser, loginUser, logoutUser, getAllBets, getBattleStatus, getUserInfo, getAllTransactions };
