@@ -26,7 +26,10 @@ app.use(express.static('public'));
 app.use(cookieParser());
 
 //setup default route
-app.get('/', (req, res) => res.send('Welcome to Play rite'));
+app.get('/', (req, res) => {
+    res.send('Welcome to Play rite');
+    console.log(req.query);
+});
 
 //mount API routes on the app
 //otp routes

@@ -6,6 +6,7 @@ const ApiResponse = require('../utils/apiResponse');
 const Bet = require('../models/bet.model');
 const Bank = require('../models/bank.model');
 const Transaction = require('../models/transaction.model');
+const jwt = require('jsonwebtoken');
 
 const registerUser = asyncHandler(async (req, res) => {
     // Get the user details from the request
@@ -17,7 +18,7 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 
     // Email format can be verified using regex
-    
+
     // Check if user already exists
     if (await User.findOne({ email })) {
         throw new ApiError(409, 'User already exists');
@@ -80,10 +81,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
     return res.status(200)
         .cookie('token', token, cookieOptions)
-        .json(new ApiResponse(200, {
-            user: loggedInUser,
-            token
-        }, 'User logged in successfully'));
+        .json(new ApiResponse(200, loggedInUser, 'User logged in successfully'));
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
@@ -100,10 +98,10 @@ const logoutUser = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, {}, 'User logged out successfully'));
 });
 
-const getAllBets = asyncHandler(async (req,res) => {
+const getAllBets = asyncHandler(async (req, res) => {
     //get the user id and validate
     const userId = req.user._id;
-    if(!userId) {
+    if (!userId) {
         throw new ApiError(400, 'User id not found');
     }
 
@@ -135,13 +133,13 @@ const getAllBets = asyncHandler(async (req,res) => {
 const getBattleStatus = asyncHandler(async (req, res) => {
     //get battle id from request parameters
     const { battleId } = req.params;
-    if(!battleId) {
+    if (!battleId) {
         throw new ApiError(400, 'Battle ID not found in request');
     }
 
     //get the battle from DB
     const battle = await Battle.findById(battleId).populate('result'); //if the result is null populate() won't throw an error
-    if(!battle) {
+    if (!battle) {
         throw new ApiError(404, 'Battle not found');
     }
 
@@ -162,14 +160,14 @@ const getUserInfo = asyncHandler(async (req, res) => {
     //no need to touch request body, user id will be provided through auth MW
     const { user } = req;
     const userId = user && user._id;
-    if(!userId) {
+    if (!userId) {
         throw new ApiError(400, 'User id not found');
     }
 
     //get the user and validate
     const userInfo = await User.findById(userId).select('-password');
     //populate the required fields after frontend
-    if(!userInfo) {
+    if (!userInfo) {
         throw new ApiError(404, 'User not found');
     }
 
@@ -181,7 +179,7 @@ const getUserInfo = asyncHandler(async (req, res) => {
     ));
 });
 
-const getAllTransactions = asyncHandler(async(req, res) => {
+const getAllTransactions = asyncHandler(async (req, res) => {
     //get the user
     const user = await User.findById(req.user._id);
 
@@ -198,4 +196,52 @@ const getAllTransactions = asyncHandler(async(req, res) => {
     ));
 });
 
-module.exports = { registerUser, loginUser, logoutUser, getAllBets, getBattleStatus, getUserInfo, getAllTransactions };
+const getUserStatus = asyncHandler(async (req, res) => {
+    const token = req.cookies?.token || req.body?.token || req.header('Authorization')?.replace('Bearer ', '');
+
+    if (!token) {
+        return res.status(401).json(new ApiResponse(
+            401,
+            null,
+            'User is not logged In'
+        ));
+    }
+
+    //decode the token
+    let decodedToken;
+    try {
+        decodedToken = await jwt.verify(token, process.env.TOKEN_SECRET);
+    } catch (error) {
+        console.error('Error in verifying token\n', error);
+        throw new ApiError(401, 'Invalid Token', error);
+    }
+
+    //get the user from DB
+    const user = await User.findById(decodedToken._id).select('-password');
+
+    //verify the token
+    if (!user) {
+        return res.status(401).json(new ApiResponse(
+            401,
+            null,
+            'User is not logged In'
+        ));
+    }
+
+    //check if both tokens match
+    if (user.token !== token) {
+        return res.status(401).json(new ApiResponse(
+            401,
+            null,
+            'User is not logged In'
+        ));
+    }
+
+    return res.status(200).json(new ApiResponse(
+        200,
+        user,
+        'User is logged In'
+    ));
+});
+
+module.exports = { registerUser, loginUser, logoutUser, getAllBets, getBattleStatus, getUserInfo, getAllTransactions, getUserStatus };

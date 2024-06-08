@@ -15,7 +15,7 @@ module.exports = function aysncWrapper(asyncTask) {
             //if no error occurs then this asyncTask will send the necessary response
         } catch(error) {
             console.error(error);
-            const statusCode = error.code || 500;
+            const statusCode = error.statusCode || 500;
             return res.status(statusCode).json(
                 new ApiResponse(statusCode, error, error.message)
             );
