@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = import.meta.env.API_URL;
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 //async functions are wrapped as promises by default
 
@@ -9,7 +9,7 @@ const login = async ({email, password}) => {
         return await axios.post(`${BASE_URL}/auth/login`, {
             email,
             password
-        });
+        }).then(res => res.data);
     } catch(error) {
         console.error('Error in :: login :: \n',error);
         throw error;
