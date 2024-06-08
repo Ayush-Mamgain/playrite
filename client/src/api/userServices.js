@@ -23,5 +23,10 @@ const getAllTransactions = asyncHandler(async (reqData) => {
     return apiCall(API_URL, 'get', reqData);
 }, 'get All Transactions');
 
-export { logout, getUserInfo, getAllBets, getAllTransactions };
+const getUserStatus = asyncHandler(async (reqData) => {
+    const API_URL = `${BASE_URL}/user/getUserStatus`;
+    return apiCall(API_URL, 'get', reqData);
+}, 'get user status');
+
+export { logout, getUserInfo, getAllBets, getAllTransactions, getUserStatus };
 

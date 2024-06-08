@@ -1,33 +1,40 @@
 import React, { useEffect } from 'react'
 import { login } from './api/authServices'
-import { getUserInfo, logout, getAllBets, getAllTransactions } from './api/userServices';
-import axios from 'axios';
+import { getUserInfo, logout, getAllBets, getAllTransactions, getUserStatus } from './api/userServices';
+import { loginUser, logoutUser } from './features/authSlice';
+import { useDispatch } from 'react-redux';
+
 const App = () => {
+    const dispatch = useDispatch();
+    const [loading, setLoading] = useState(true);
+    // const [error, setError] = useState(false); --> for server errors --> navigate to a special error page
+
     useEffect(() => {
-        (async () => {
-            await login({
-                email: 'ayushmamgain1234@gmail.com',
-                password: 'password',
-            }).then((res) => console.log(res));
-        })();
+        getUserStatus()
+        .then(res => res.data)
+        .then(userData => {
+            if(userData) {
+                dispatch(loginUser(userData));
+                console.log(userData);
+            } else {
+                dispatch(logoutUser());
+            }
+        })
+        .finally(() => setLoading(false));
     }, []);
 
-    const logoutHandler = async() => {
-        await logout()
+    const testHandler = async (event) => {
+        //test the APIs here
+        await login({
+            email: 'ayushmamgain1234@gmail.com',
+            password: 'password'
+        })
         .then(res => console.log(res));
     }
-
-    const userHandler = async () => {
-        await getAllBets()
-        .then(res => console.log(res));
-        await getAllTransactions()
-        .then(res => console.log(res));
-    }
-
+    
     return (
         <div className='app'>
-            <button onClick={logoutHandler}>Logout</button>
-            <button onClick={userHandler}>User</button>
+            <button onClick={testHandler}>TEST</button>
         </div>
     )
 }
