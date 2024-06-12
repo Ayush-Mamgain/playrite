@@ -5,9 +5,11 @@ const authSlice = createSlice({
     initialState: {
             status: false,
             userData: null //this serves as cache to access data quickly
+            //this user data will contain token that can we sent to server through header
     },
     reducers: {
         loginUser: (state, action) => {
+            // console.log(action);
             state.status = true,
             state.userData = action.payload;
         },
