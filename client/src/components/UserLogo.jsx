@@ -1,8 +1,8 @@
 import React from 'react';
 
-const UserLogo = () => {
+const UserLogo = ({onHit}) => {
     return (
-        <div className='userLogo'>
+        <div className='userLogo' onClick={onHit}>
             USER_LOGO
         </div>
     );

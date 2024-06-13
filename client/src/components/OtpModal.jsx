@@ -7,12 +7,14 @@ import { login, register } from '../apiServices/authServices';
 import { loginUser } from '../features/authSlice';
 import toast from 'react-hot-toast';
 import Loading from './Loading';
+import { useNavigate } from 'react-router-dom';
 
 const OtpModal = ({ email, password, confirmPassword, username, contact }) => {
     const [otp, setOtp] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleError = (error) => {
         setError(error);
@@ -36,7 +38,7 @@ const OtpModal = ({ email, password, confirmPassword, username, contact }) => {
                     }).then((res) => {
                         console.log(res);
                         dispatch(loginUser(res.data));
-                        //navigate to the home page
+                        navigate('/');
                     });
                 });
             })

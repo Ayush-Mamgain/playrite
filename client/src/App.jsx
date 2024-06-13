@@ -2,8 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { getUserStatus } from './apiServices/userServices';
 import { loginUser, logoutUser } from './features/authSlice';
 import { useDispatch } from 'react-redux';
-import LoginModal from './components/LoginModal';
-import RegisterModal from './components/RegisterModal'
+import Header from './components/Header';
+import Footer from './components/Footer';
+import { Route, Routes } from 'react-router-dom';
+import { Home, Profile, Bets, Transactions, Matches} from './pages'
+import NotFound from './pages/NotFound';
 
 const App = () => {
     const dispatch = useDispatch();
@@ -12,18 +15,21 @@ const App = () => {
     useEffect(() => {
         getUserStatus()
         .then(res => res.data)
-        .then(userData => {
-            if(userData) {
-                dispatch(loginUser(userData));
-            } else {
-                dispatch(logoutUser());
-            }
-        })
-        // .finally(() => setLoading(false));
+        .then(userData => dispatch(loginUser(userData)))
+        .catch(error =>  dispatch(logoutUser()))
     }, []);
 
     return <div className="app">
-        <RegisterModal />
+        <Header />
+            <Routes>
+                <Route path='/' element={<Home />} />
+                <Route path='/profile' element={<Profile />} />
+                <Route path='/bets' element={<Bets />} />
+                <Route path='/transactions' element={<Transactions />} />
+                <Route path='/matches' element={<Matches />} />
+                <Route path='*' element={<NotFound />} />
+            </Routes>
+        <Footer />
     </div>
 }
 

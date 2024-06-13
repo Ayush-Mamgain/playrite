@@ -11,7 +11,7 @@ import { loginUser } from '../features/authSlice';
 import Error from './Error';
 import OtpModal from './OtpModal';
 
-const RegisterModal = () => {
+const RegisterModal = ({setShowRegister}) => {
     const disptach = useDispatch();
     const [otp, setOtp] = useState(false);
 

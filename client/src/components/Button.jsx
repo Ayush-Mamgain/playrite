@@ -5,6 +5,7 @@ const Button = ({
     type = 'submit',
     textColor = 'black',
     bgColor = 'white',
+    onHit,
     ...props
 }) => {
     return (
@@ -14,6 +15,7 @@ const Button = ({
                 backgroundColor: bgColor,
             }}
             type={type}
+            onClick={onHit}
             {...props}
         >
             {children}

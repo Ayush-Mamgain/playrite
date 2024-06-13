@@ -1,11 +1,11 @@
 import React from 'react';
 import WalletLogo from './WalletLogo';
 
-const Wallet = ({amount}) => {
+const Wallet = ({walletAmount, onHit}) => {
     return (
         <div className='wallet'>
-            {amount}
-            <WalletLogo />
+            {walletAmount}
+            <WalletLogo onHit={onHit}/>
         </div>
     );
 }
