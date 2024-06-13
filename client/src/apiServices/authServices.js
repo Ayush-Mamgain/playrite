@@ -1,4 +1,4 @@
-import apiHandler from '../axios/apiCall';
+import apiHandler from '../axios/apiHandler';
 
 //we can also create a separate file for all API url endpoints and then import it here 
 

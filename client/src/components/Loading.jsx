@@ -1,6 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import toast from 'react-hot-toast';
 
 const Loading = () => {
+    useEffect(() => {
+        const toastId = toast.loading('Loading...');
+        return () => {
+            toast.dismiss(toastId);
+        }
+    }, [])
     return (
         <div className='loading'>
             LOADING...

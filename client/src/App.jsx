@@ -3,6 +3,7 @@ import { getUserStatus } from './apiServices/userServices';
 import { loginUser, logoutUser } from './features/authSlice';
 import { useDispatch } from 'react-redux';
 import LoginModal from './components/LoginModal';
+import RegisterModal from './components/RegisterModal'
 
 const App = () => {
     const dispatch = useDispatch();
@@ -22,7 +23,7 @@ const App = () => {
     }, []);
 
     return <div className="app">
-        <LoginModal />
+        <RegisterModal />
     </div>
 }
 

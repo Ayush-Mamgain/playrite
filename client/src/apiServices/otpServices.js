@@ -1,4 +1,4 @@
-import apiHandler from "../axios/apiCall";
+import apiHandler from "../axios/apiHandler";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 

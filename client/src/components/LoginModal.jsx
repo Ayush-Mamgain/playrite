@@ -21,6 +21,14 @@ const LoginModal = () => {
     const [loading, setLoading] = useState(false) //can loading be done globally through slice?
     const [error, setError] = useState(null)
 
+    const resetFormData = () => {
+        const emptyFormData = Object.keys(formData).reduce((acc, key) => {
+            acc[key] = '';
+            return acc;
+        }, {});
+        setFormData(emptyFormData);
+    };
+
     const submitHandler = (event) => {
         event.preventDefault()
         const toastId = toast.loading('Loading')
@@ -41,10 +49,7 @@ const LoginModal = () => {
             .finally(() => {
                 setLoading(false)
                 toast.dismiss(toastId)
-                setFormData({
-                    email: '',
-                    password: '',
-                })
+                resetFormData();
             })
     }
 
@@ -52,7 +57,7 @@ const LoginModal = () => {
     // if(error.statusCode === 500) return <Error error={error}/> --> for server side errors
     return (
         <div>
-            Sign In
+            <h1>Sign In</h1>
             <form onSubmit={submitHandler}>
                 <Input
                     label="Email"
