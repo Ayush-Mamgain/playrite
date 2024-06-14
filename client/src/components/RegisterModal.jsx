@@ -2,17 +2,13 @@ import React, { useState } from 'react';
 import Input from './Input';
 import Button from './Button';
 import inputHandler from '../utils/inputHandler';
-import { login, register } from '../apiServices/authServices';
 import { sendOtp } from '../apiServices/otpServices';
 import Loading from './Loading';
-import { useDispatch } from 'react-redux';
 import toast from 'react-hot-toast';
-import { loginUser } from '../features/authSlice';
 import Error from './Error';
 import OtpModal from './OtpModal';
 
-const RegisterModal = ({setShowRegister}) => {
-    const disptach = useDispatch();
+const RegisterModal = ({ setShowRegister, setShowLogin }) => {
     const [otp, setOtp] = useState(false);
 
     const [formData, setFormData] = useState({
@@ -63,8 +59,7 @@ const RegisterModal = ({setShowRegister}) => {
 
     if (loading) return <Loading />;
     // if(error.statusCode === 500) return <Error error={error}/> --> for server side errors
-    if (otp)
-        return <OtpModal {...formData} />;
+    if (otp) return <OtpModal {...formData} />;
     return (
         <div className="registerModal">
             <h1>Register</h1>
@@ -106,6 +101,17 @@ const RegisterModal = ({setShowRegister}) => {
                 />
                 <Button>Register</Button>
             </form>
+            <p>
+                Already registered?{' '}
+                <Button
+                    onHit={() => {
+                        setShowRegister(false);
+                        setShowLogin(true);
+                    }}
+                >
+                    Sign in
+                </Button>
+            </p>
         </div>
     );
 };

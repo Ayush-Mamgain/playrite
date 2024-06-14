@@ -10,7 +10,7 @@ import { loginUser } from '../features/authSlice';
 import Error from './Error';
 import { useNavigate } from 'react-router-dom';
 
-const LoginModal = ({setShowLogin}) => {
+const LoginModal = ({ setShowLogin, setShowRegister }) => {
     const disptach = useDispatch();
     const navigate = useNavigate();
 
@@ -79,6 +79,17 @@ const LoginModal = ({setShowLogin}) => {
                 />
                 <Button>Sign In</Button>
             </form>
+            <p>
+                Don't have an account?{' '}
+                <Button
+                    onHit={() => {
+                        setShowRegister(true);
+                        setShowLogin(false);
+                    }}
+                >
+                    Register
+                </Button>
+            </p>
         </div>
     );
 };

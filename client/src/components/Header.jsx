@@ -117,10 +117,10 @@ const Header = () => {
             </nav>
 
             <Modal show={showLogin} handleClose={() => setShowLogin(false)}>
-                <LoginModal setShowLogin={setShowLogin}/>
+                <LoginModal setShowLogin={setShowLogin} setShowRegister={setShowRegister} />
             </Modal>
             <Modal show={showRegister} handleClose={() => setShowRegister(false)}>
-                <RegisterModal setShowRegister={setShowRegister}/>
+                <RegisterModal setShowRegister={setShowRegister} setShowLogin={setShowLogin} />
             </Modal>
             <Modal show={showTransaction} handleClose={() => setShowTransaction(false)}>
                 <TransactionModal walletAmount={walletAmount} setShowTransaction={setShowTransaction}/>
