@@ -9,9 +9,11 @@ import toast from 'react-hot-toast';
 import { loginUser } from '../features/authSlice';
 import Error from './Error';
 import { useNavigate } from 'react-router-dom';
+import { setShowLogin, setShowRegister } from '../features/modalSlice';
+import { setBalance } from '../features/walletSlice';
 
-const LoginModal = ({ setShowLogin, setShowRegister }) => {
-    const disptach = useDispatch();
+const LoginModal = () => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -19,9 +21,7 @@ const LoginModal = ({ setShowLogin, setShowRegister }) => {
         password: '',
     });
 
-    const [data, setData] = useState(null);
     const [loading, setLoading] = useState(false); //can loading be done globally through slice?
-    const [error, setError] = useState(null);
 
     const resetFormData = () => {
         const emptyFormData = Object.keys(formData).reduce((acc, key) => {
@@ -31,25 +31,24 @@ const LoginModal = ({ setShowLogin, setShowRegister }) => {
         setFormData(emptyFormData);
     };
 
+    const loginSuccessHandler = (res) => {
+        console.log(res);
+        toast.success('Login successful');
+        dispatch(loginUser(res.data.token));
+        dispatch(setBalance(res.data.wallet));
+        dispatch(setShowLogin(false));
+        dispatch(setShowRegister(false));
+        navigate('/');
+    };
+
     const submitHandler = (event) => {
         event.preventDefault();
         const toastId = toast.loading('Loading');
         setLoading(true);
         const bodyData = { ...formData }; //cloning the formData because we don't want to send the
         login(bodyData)
-            .then((res) => {
-                //this is the raw res received from server
-                console.log(data);
-                toast.success('Login successful');
-                setData(res.data);
-                disptach(loginUser(res.data));
-                setShowLogin(false);
-                navigate('/');
-            })
-            .catch((error) => {
-                setError(error);
-                toast.error(error.message);
-            })
+            .then((res) => loginSuccessHandler(res))
+            .catch((error) => toast.error(error.message))
             .finally(() => {
                 setLoading(false);
                 toast.dismiss(toastId);
@@ -57,11 +56,14 @@ const LoginModal = ({ setShowLogin, setShowRegister }) => {
             });
     };
 
-    if (loading) return <Loading />;
-    // if(error.statusCode === 500) return <Error error={error}/> --> for server side errors
     return (
-        <div>
+        <div className='form-wrapper'>
             <h1>Sign In</h1>
+            {loading && (
+                <div className="form-overlay">
+                    
+                </div>
+            )}
             <form onSubmit={submitHandler}>
                 <Input
                     label="Email"
@@ -83,8 +85,8 @@ const LoginModal = ({ setShowLogin, setShowRegister }) => {
                 Don't have an account?{' '}
                 <Button
                     onHit={() => {
-                        setShowRegister(true);
-                        setShowLogin(false);
+                        dispatch(setShowRegister(true));
+                        dispatch(setShowLogin(false));
                     }}
                 >
                     Register

@@ -1,10 +1,12 @@
 import React from 'react';
 import WalletLogo from './WalletLogo';
+import { useSelector } from 'react-redux';
 
-const Wallet = ({walletAmount, onHit}) => {
+const Wallet = ({onHit}) => {
+    const walletBalance = useSelector(state => state.wallet.balance)
     return (
         <div className='wallet'>
-            {walletAmount}
+            {walletBalance}
             <WalletLogo onHit={onHit}/>
         </div>
     );

@@ -8,8 +8,9 @@ import { loginUser } from '../features/authSlice';
 import toast from 'react-hot-toast';
 import Loading from './Loading';
 import { useNavigate } from 'react-router-dom';
+import { setShowRegister } from '../features/modalSlice';
 
-const OtpModal = ({ email, password, confirmPassword, username, contact }) => {
+const OtpModal = ({formData, setFormData, setShowOtp}) => {
     const [otp, setOtp] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
@@ -21,23 +22,35 @@ const OtpModal = ({ email, password, confirmPassword, username, contact }) => {
         toast.error(error.message);
     };
 
+    const resetFormData = () => {
+        const emptyFormData = Object.keys(formData).reduce((acc, key) => {
+            acc[key] = '';
+            return acc;
+        }, {});
+        setFormData(emptyFormData);
+    };
+
     const submitHandler = (event) => {
         event.preventDefault();
 
         const toastId = toast.loading('Loading...');
         setLoading(true);
 
-        verifyOtp({ email, otp })
+        verifyOtp({ email: formData.email, otp })
             .then((res) => {
                 console.log(res);
                 toast.success('OTP verified successfully');
-                register({ email, username, password, confirmPassword, contact }).then((res) => {
+                register({...formData}).then((res) => {
                     console.log(res);
                     login({
-                        email, password
+                        email: formData.email,
+                        password: formData.password
                     }).then((res) => {
                         console.log(res);
-                        dispatch(loginUser(res.data));
+                        dispatch(loginUser(res.data.token));
+                        dispatch(setShowRegister(false));
+                        resetFormData();
+                        setShowOtp(false);
                         navigate('/');
                     });
                 });

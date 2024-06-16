@@ -7,41 +7,44 @@ import Button from './Button';
 import Wallet from './Wallet';
 import NavMenu from './NavMenu';
 import CrossLogo from './CrossLogo';
-import { logoutUser } from '../features/authSlice';
-import { logout } from '../apiServices/userServices';
-import toast from 'react-hot-toast';
 import Modal from './Modal';
 import RegisterModal from './RegisterModal';
 import LoginModal from './LoginModal';
 import TransactionModal from './TransactionModal';
+import {
+    setShowLogin,
+    setShowRegister,
+    setShowTransaction,
+} from '../features/modalSlice';
+import LogoutBtn from './LogoutBtn';
+import HeaderModals from './HeaderModals';
 
 const Header = () => {
     const dispatch = useDispatch();
 
     const auth = useSelector((state) => state.auth);
     const authStatus = auth.status;
-    const walletAmount = authStatus ? auth.userData.walletAmount : 0;
 
     const [navMenu, setNavMenu] = useState(false);
 
-    const [showLogin, setShowLogin] = useState(false);
-    const [showRegister, setShowRegister] = useState(false);
-    const [showTransaction, setShowTransaction] = useState(false);
+    // const showLogin = useSelector((state) => state.modal.showLogin);
+    // const showRegister = useSelector((state) => state.modal.showRegister);
+    // const showTransaction = useSelector((state) => state.modal.showTransaction);
 
     const navItems = [
         {
             name: 'login',
             active: !authStatus,
             onClick: function () {
-                setShowLogin(true);
-            }
+                dispatch(setShowLogin(true));
+            },
         },
         {
             name: 'register',
             active: !authStatus,
             onClick: function () {
-                setShowRegister(true);
-            }
+                dispatch(setShowRegister(true));
+            },
         },
     ];
 
@@ -68,20 +71,8 @@ const Header = () => {
         },
     ];
 
-    const handleLogout = () => {
-        const toastId = toast.loading('Loading...');
-        logout()
-            .then((res) => {
-                console.log(res);
-                toast.success('Logout successful');
-                dispatch(logoutUser());
-            })
-            .catch((error) => toast.error(error.message))
-            .finally(() => toast.dismiss(toastId));
-    }
-
     return (
-        <div className='header'>
+        <div className="header">
             <nav className="navbar">
                 <div className="logoWrapper">
                     <Link to="/">
@@ -89,16 +80,26 @@ const Header = () => {
                     </Link>
                 </div>
                 <ul>
+                    {authStatus && (
+                        <li>
+                            {
+                                <Wallet
+                                    onHit={() =>
+                                        dispatch(setShowTransaction(true))
+                                    }
+                                />
+                            }
+                        </li>
+                    )}
                     {navItems.map(
                         (item) =>
                             item.active && (
                                 <li key={item.name}>
-                                    <Button onHit={item.onClick}>{item.name}</Button>
+                                    <Button onHit={item.onClick}>
+                                        {item.name}
+                                    </Button>
                                 </li>
                             )
-                    )}
-                    {authStatus && (
-                        <li>{<Wallet walletAmount={walletAmount} onHit={() => setShowTransaction(true)}/>}</li>
                     )}
                     {authStatus && (
                         <li>
@@ -111,20 +112,28 @@ const Header = () => {
                     )}
                 </ul>
                 {navMenu && <NavMenu navMenuItems={navMenuItems} />}
-                <Button type="button" onHit={handleLogout}>
-                    Logout
-                </Button>
+                <LogoutBtn />
             </nav>
 
-            <Modal show={showLogin} handleClose={() => setShowLogin(false)}>
-                <LoginModal setShowLogin={setShowLogin} setShowRegister={setShowRegister} />
+            <HeaderModals />
+            {/* <Modal
+                show={showLogin}
+                handleClose={() => dispatch(setShowLogin(false))}
+            >
+                <LoginModal />
             </Modal>
-            <Modal show={showRegister} handleClose={() => setShowRegister(false)}>
-                <RegisterModal setShowRegister={setShowRegister} setShowLogin={setShowLogin} />
+            <Modal
+                show={showRegister}
+                handleClose={() => dispatch(setShowRegister(false))}
+            >
+                <RegisterModal />
             </Modal>
-            <Modal show={showTransaction} handleClose={() => setShowTransaction(false)}>
-                <TransactionModal walletAmount={walletAmount} setShowTransaction={setShowTransaction}/>
-            </Modal>
+            <Modal
+                show={showTransaction}
+                handleClose={() => dispatch(setShowTransaction(false))}
+            >
+                <TransactionModal />
+            </Modal> */}
         </div>
     );
 };

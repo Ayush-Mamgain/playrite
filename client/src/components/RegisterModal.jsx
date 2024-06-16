@@ -3,12 +3,13 @@ import Input from './Input';
 import Button from './Button';
 import inputHandler from '../utils/inputHandler';
 import { sendOtp } from '../apiServices/otpServices';
-import Loading from './Loading';
 import toast from 'react-hot-toast';
-import Error from './Error';
 import OtpModal from './OtpModal';
+import { useDispatch } from 'react-redux';
+import { setShowLogin, setShowRegister } from '../features/modalSlice';
 
-const RegisterModal = ({ setShowRegister, setShowLogin }) => {
+const RegisterModal = () => {
+    const dispatch = useDispatch();
     const [otp, setOtp] = useState(false);
 
     const [formData, setFormData] = useState({
@@ -19,49 +20,44 @@ const RegisterModal = ({ setShowRegister, setShowLogin }) => {
         contact: '',
     });
 
-    const [data, setData] = useState(null);
     const [loading, setLoading] = useState(false); //can loading be done globally through slice?
-    const [error, setError] = useState(null);
-
-    const resetFormData = () => {
-        const emptyFormData = Object.keys(formData).reduce((acc, key) => {
-            acc[key] = '';
-            return acc;
-        }, {});
-        setFormData(emptyFormData);
-    };
-
-    const handleError = (error) => {
-        setError(error);
-        toast.error(error.message);
-    };
 
     const submitHandler = (event) => {
         event.preventDefault();
         const toastId = toast.loading('Loading');
         setLoading(true);
-        const bodyData = { ...formData }; //cloning the formData because we don't want to send the
+        const bodyData = { ...formData }; //cloning the formData because we don't want to send the state directly
+        console.log(bodyData);
 
         sendOtp({
-            email: formData.email,
+            email: bodyData.email,
         })
             .then((res) => {
                 console.log(res);
                 setOtp(true);
             })
-            .catch((error) => handleError(error))
+            .catch((error) => toast.error(error.message))
             .finally(() => {
                 setLoading(false);
                 toast.dismiss(toastId);
-                // resetFormData();
             });
     };
 
-    if (loading) return <Loading />;
-    // if(error.statusCode === 500) return <Error error={error}/> --> for server side errors
-    if (otp) return <OtpModal {...formData} />;
+    if (otp)
+        return (
+            <OtpModal
+                formData={formData}
+                setFormData={setFormData}
+                setShowOtp={setOtp}
+            />
+        );
     return (
-        <div className="registerModal">
+        <div className="registerModal form-wrapper">
+            {loading && (
+                <div className="form-overlay">
+                    <span>Loading...</span>
+                </div>
+            )}
             <h1>Register</h1>
             <form onSubmit={submitHandler}>
                 <Input
@@ -105,8 +101,8 @@ const RegisterModal = ({ setShowRegister, setShowLogin }) => {
                 Already registered?{' '}
                 <Button
                     onHit={() => {
-                        setShowRegister(false);
-                        setShowLogin(true);
+                        dispatch(setShowRegister(false));
+                        dispatch(setShowLogin(true));
                     }}
                 >
                     Sign in
