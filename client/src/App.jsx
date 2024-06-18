@@ -10,6 +10,7 @@ import { Route, Routes } from 'react-router-dom';
 import { Home, Profile, Bets, Transactions, Matches } from './pages';
 import NotFound from './pages/NotFound';
 import { setBalance } from './features/walletSlice';
+import { setUser } from './features/profileSlice';
 
 const App = () => {
     const dispatch = useDispatch();
@@ -18,8 +19,16 @@ const App = () => {
     useEffect(() => {
         getUserStatus()
             .then((res) => {
-                dispatch(loginUser(res?.data?.token));
-                dispatch(setBalance(res?.data?.wallet));
+                const user = res.data;
+                console.log(user);
+                dispatch(loginUser(user.token));
+                dispatch(setBalance(user.wallet));
+                dispatch(setUser({
+                    id: user._id,
+                    username: user.username,
+                    email: user.email,
+                    contact: user.contact
+                }))
             })
             .catch((error) => dispatch(logoutUser()));
     }, []);

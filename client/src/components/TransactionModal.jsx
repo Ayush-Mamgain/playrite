@@ -6,21 +6,23 @@ import Banks from './Banks';
 import Button from './Button';
 import Input from './Input';
 
-const TransactionModal = () => {
+const TransactionModal = ({handleClose}) => {
     const walletAmount = useSelector((state) => state.wallet.balance);
     const [transaction, setTransaction] = useState({
         amount: 0,
         deposit: true,
     });
 
+    handleClose(() => setTransaction({amount: 0, deposit: true}));
+
     return (
         <div className="transactionModal">
             {`₹${walletAmount}`}
             <form>
                 <Input
-                    name='transactionType'
                     label="Deposit"
                     type="radio"
+                    checked={transaction.deposit}
                     onMutate={(event) =>
                         setTransaction((prevState) => {
                             return {
@@ -31,9 +33,9 @@ const TransactionModal = () => {
                     }
                 />
                 <Input
-                    name='transactionType'
                     label="Withdraw"
                     type="radio"
+                    checked={!transaction.deposit}
                     onMutate={(event) =>
                         setTransaction((prevState) => {
                             return {
@@ -46,6 +48,7 @@ const TransactionModal = () => {
                 <Input
                     type="number"
                     label="Amount"
+                    value={transaction.amount}
                     onMutate={(event) =>
                         setTransaction((prevState) => {
                             return {

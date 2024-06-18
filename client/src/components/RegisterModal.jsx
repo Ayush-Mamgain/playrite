@@ -7,8 +7,9 @@ import toast from 'react-hot-toast';
 import OtpModal from './OtpModal';
 import { useDispatch } from 'react-redux';
 import { setShowLogin, setShowRegister } from '../features/modalSlice';
+import resetForm from '../utils/resetForm';
 
-const RegisterModal = () => {
+const RegisterModal = ({handleClose}) => {
     const dispatch = useDispatch();
     const [otp, setOtp] = useState(false);
 
@@ -21,6 +22,8 @@ const RegisterModal = () => {
     });
 
     const [loading, setLoading] = useState(false); //can loading be done globally through slice?
+
+    handleClose(() => resetForm(formData, setFormData)); //should this be put inside useEffec
 
     const submitHandler = (event) => {
         event.preventDefault();

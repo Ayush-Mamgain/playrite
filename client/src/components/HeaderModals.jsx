@@ -12,30 +12,51 @@ import TransactionModal from './TransactionModal';
 
 const HeaderModals = () => {
     const dispatch = useDispatch();
+    const showModal = useSelector(state => state.modal);
 
-    const showLogin = useSelector((state) => state.modal.showLogin);
-    const showRegister = useSelector((state) => state.modal.showRegister);
-    const showTransaction = useSelector((state) => state.modal.showTransaction);
+    let loginClose;
+    let registerClose;
+    let transactionClose;
+
+    function setLoginClose(func) {
+        loginClose = func;
+    }
+    function setRegisterClose(func) {
+        registerClose = func;
+    }
+    function setTransactionClose(func) {
+        transactionClose = func;
+    }
 
     return (
         <div className='headerModals'>
             <Modal
-                show={showLogin}
-                handleClose={() => dispatch(setShowLogin(false))}
+                show={showModal.showLogin}
+                handleClose={() => {
+                    dispatch(setShowLogin(false));
+                    loginClose();
+                }}
             >
-                <LoginModal />
+                <LoginModal handleClose={setLoginClose}/>
             </Modal>
             <Modal
-                show={showRegister}
-                handleClose={() => dispatch(setShowRegister(false))}
+                show={showModal.howRegister}
+                handleClose={() => {
+                    dispatch(setShowRegister(false));
+                    registerClose();
+                }}
+                    
             >
-                <RegisterModal />
+                <RegisterModal handleClose={setRegisterClose}/>
             </Modal>
             <Modal
-                show={showTransaction}
-                handleClose={() => dispatch(setShowTransaction(false))}
+                show={showModal.showTransaction}
+                handleClose={() => {
+                    dispatch(setShowTransaction(false));
+                    transactionClose();
+                }}
             >
-                <TransactionModal />
+                <TransactionModal handleClose={setTransactionClose}/>
             </Modal>
         </div>
     );

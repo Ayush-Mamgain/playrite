@@ -19,7 +19,7 @@ const withdraw = (bodyData) => {
 const depositCallback = (bodyData) => {
     return apiHandler({
         method: 'post',
-        url: '/transaction/depositErrorCallback',
+        url: '/transaction/depositCallback',
         bodyData
     })
 }

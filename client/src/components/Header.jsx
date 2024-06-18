@@ -27,10 +27,6 @@ const Header = () => {
 
     const [navMenu, setNavMenu] = useState(false);
 
-    // const showLogin = useSelector((state) => state.modal.showLogin);
-    // const showRegister = useSelector((state) => state.modal.showRegister);
-    // const showTransaction = useSelector((state) => state.modal.showTransaction);
-
     const navItems = [
         {
             name: 'login',
@@ -116,24 +112,6 @@ const Header = () => {
             </nav>
 
             <HeaderModals />
-            {/* <Modal
-                show={showLogin}
-                handleClose={() => dispatch(setShowLogin(false))}
-            >
-                <LoginModal />
-            </Modal>
-            <Modal
-                show={showRegister}
-                handleClose={() => dispatch(setShowRegister(false))}
-            >
-                <RegisterModal />
-            </Modal>
-            <Modal
-                show={showTransaction}
-                handleClose={() => dispatch(setShowTransaction(false))}
-            >
-                <TransactionModal />
-            </Modal> */}
         </div>
     );
 };

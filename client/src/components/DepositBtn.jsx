@@ -13,7 +13,7 @@ const DepositBtn = ({ amount }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
-    const userData = useSelector((state) => state.auth.userData);
+    const user = useSelector((state) => state.user.user);
 
     const createOrder = useCallback(async (amount) => {
         const toastId = toast.loading('Creating order...');
@@ -32,47 +32,44 @@ const DepositBtn = ({ amount }) => {
 
     const initiatePayment = useCallback(
         async ({ orderId, amount, currency }) => {
-            const options = useMemo(
-                () => ({
-                    key: import.meta.env.VITE_RAZORPAY_KEY,
-                    amount,
-                    currency,
-                    name: 'Playrite',
-                    description: 'Deposit for wallet',
-                    order_id: orderId,
+            const options = {
+                key: import.meta.env.VITE_RAZORPAY_KEY,
+                amount,
+                currency,
+                name: 'Playrite',
+                description: 'Deposit for wallet',
+                order_id: orderId,
 
-                    handler: async function (response) {
-                        //this function will be called after a successful payment
-                        console.log(response);
-                        const toastId = toast.loading('Processing payment...');
+                handler: async function (response) {
+                    //this function will be called after a successful payment
+                    console.log(response);
+                    const toastId = toast.loading('Processing payment...');
 
-                        depositCallback(response)
-                            .then((res) => {
-                                console.log(res);
-                                toast.success('Deposit Successful');
-                                dispatch(incrementBalance(res.data.amount))
-                                navigate('/');
-                            })
-                            .catch((error) => toast.error(error.message))
-                            .finally(() => toast.dismiss(toastId));
-                    },
+                    depositCallback(response)
+                        .then((res) => {
+                            console.log(res);
+                            toast.success('Deposit Successful');
+                            dispatch(incrementBalance(res.data.amount/100)); //amount will be in paisa
+                            navigate('/');
+                        })
+                        .catch((error) => toast.error(error.message))
+                        .finally(() => toast.dismiss(toastId));
+                },
 
-                    modal: {
-                        ondismiss: () => {
-                            toast.error('Payment cancelled');
-                        },
+                modal: {
+                    ondismiss: () => {
+                        toast.error('Payment cancelled');
                     },
-                    prefill: {
-                        name: userData.username, // Replace with actual user name
-                        email: userData.email, // Replace with actual user email
-                        contact: userData.contact, // Replace with actual user contact
-                    },
-                    theme: {
-                        color: '#F37254',
-                    },
-                }),
-                [userData]
-            );
+                },
+                prefill: {
+                    name: user.username,
+                    email: user.email,
+                    contact: user.contact,
+                },
+                theme: {
+                    color: '#F37254',
+                },
+            };
 
             const rzp = new window.Razorpay(options);
             rzp.on('payment.failed', function (response) {
@@ -83,7 +80,7 @@ const DepositBtn = ({ amount }) => {
             });
             rzp.open();
         },
-        []
+        [user]
     );
 
     const depositHandler = useCallback(

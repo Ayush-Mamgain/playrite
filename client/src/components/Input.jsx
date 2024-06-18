@@ -8,6 +8,7 @@ const Input = ({
     label,
     value,
     onMutate,
+    ...props
 }) => {
     const inputId = id || useId();
     
@@ -21,6 +22,7 @@ const Input = ({
                 name={name}
                 value={value}
                 onChange={onMutate}
+                {...props}
             />
         </div>
     )

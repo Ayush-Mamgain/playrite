@@ -3,16 +3,15 @@ import Input from './Input';
 import Button from './Button';
 import inputHandler from '../utils/inputHandler';
 import { login } from '../apiServices/authServices';
-import Loading from './Loading';
 import { useDispatch } from 'react-redux';
 import toast from 'react-hot-toast';
 import { loginUser } from '../features/authSlice';
-import Error from './Error';
 import { useNavigate } from 'react-router-dom';
 import { setShowLogin, setShowRegister } from '../features/modalSlice';
 import { setBalance } from '../features/walletSlice';
+import resetForm from '../utils/resetForm';
 
-const LoginModal = () => {
+const LoginModal = ({handleClose}) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -23,13 +22,7 @@ const LoginModal = () => {
 
     const [loading, setLoading] = useState(false); //can loading be done globally through slice?
 
-    const resetFormData = () => {
-        const emptyFormData = Object.keys(formData).reduce((acc, key) => {
-            acc[key] = '';
-            return acc;
-        }, {});
-        setFormData(emptyFormData);
-    };
+    handleClose(() => resetForm(formData, setFormData)); //should this be put inside useEffect?
 
     const loginSuccessHandler = (res) => {
         console.log(res);
@@ -52,7 +45,7 @@ const LoginModal = () => {
             .finally(() => {
                 setLoading(false);
                 toast.dismiss(toastId);
-                resetFormData();
+                resetForm(formData, setFormData);
             });
     };
 
