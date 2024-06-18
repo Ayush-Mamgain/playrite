@@ -79,7 +79,7 @@ const depositCallback = asyncHandler(async (req, res) => {
         deposit,
         'Deposit successful'
     ));
-});
+}); 
 
 const depositErrorCallback = asyncHandler(async(req, res) => {
     //get error from request

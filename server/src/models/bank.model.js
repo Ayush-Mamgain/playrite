@@ -5,6 +5,10 @@ const bankSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
+    bankName: {
+        type: String,
+        required: true
+    },
     accountNumber: {
         type: String,
         required: true,

@@ -10,10 +10,10 @@ const jwt = require('jsonwebtoken');
 
 const registerUser = asyncHandler(async (req, res) => {
     // Get the user details from the request
-    const { email, username, password, confirmPassword } = req.body;
+    const { email, username, password, confirmPassword, contact } = req.body;
 
     // Validate the details
-    if ([username, email, password].some(field => !field || field.trim() === '')) {
+    if ([username, email, password, contact].some(field => !field || field.trim() === '')) {
         throw new ApiError(400, 'All fields are required');
     }
 
@@ -33,7 +33,8 @@ const registerUser = asyncHandler(async (req, res) => {
     const user = await User.create({
         username,
         email,
-        password
+        password,
+        contact
     });
 
     // Fetch the created user (to exclude the password)
@@ -244,4 +245,18 @@ const getUserStatus = asyncHandler(async (req, res) => {
     ));
 });
 
-module.exports = { registerUser, loginUser, logoutUser, getAllBets, getBattleStatus, getUserInfo, getAllTransactions, getUserStatus };
+const getAllBanks = asyncHandler(async (req, res) => {
+    const banks = await Bank.find({user: req.user._id});
+
+    if(!banks || banks.length == 0) {
+        throw new ApiError(400, 'No bank found')
+    }
+    
+    return res.status(200).json(new ApiResponse(
+        200,
+        banks,
+        'All user banks fetched successfully'
+    ));
+});
+
+module.exports = { registerUser, loginUser, logoutUser, getAllBets, getBattleStatus, getUserInfo, getAllTransactions, getUserStatus, getAllBanks };

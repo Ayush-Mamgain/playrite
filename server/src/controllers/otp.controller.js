@@ -37,7 +37,15 @@ const sendOtp = asyncHandler(async function (request, res) {
 const verifyOtp = asyncHandler(async (req, res) => {
     const { otp,email } = req.body;
 
+    console.log(`Received OTP: ${otp} for email: ${email}`);
+
     const savedOtp = await Otp.findOne({email}).sort({createdAt: -1}).limit(1);
+    console.log(savedOtp);
+
+    if (!savedOtp) {
+        throw new ApiError(403, 'No OTP found for the provided email');
+    }
+
     if(savedOtp.otp !== otp) {
         throw new ApiError(403, 'Invalid OTP');
     }
