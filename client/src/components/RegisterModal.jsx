@@ -58,7 +58,7 @@ const RegisterModal = ({handleClose}) => {
         <div className="registerModal form-wrapper">
             {loading && (
                 <div className="form-overlay">
-                    <span>Loading...</span>
+                    {/* <span>Loading...</span> */}
                 </div>
             )}
             <h1>Register</h1>

@@ -12,6 +12,9 @@ import NotFound from './pages/NotFound';
 import { setBalance } from './features/walletSlice';
 import { setUser } from './features/profileSlice';
 import { selectBank, setBank } from './features/bankSlice';
+import OrganizeMatch from './pages/OrganizeMatch';
+import MatchAdmin from './pages/MatchAdmin';
+import PlaceBet from './pages/PlaceBet';
 
 const App = () => {
     const dispatch = useDispatch();
@@ -79,6 +82,30 @@ const App = () => {
                     element={
                         <PrivateRoute>
                             <Matches />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/organizeMatch"
+                    element={
+                        <PrivateRoute>
+                            <OrganizeMatch />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/matchAdmin/:matchId"
+                    element={
+                        <PrivateRoute>
+                            <MatchAdmin />
+                        </PrivateRoute>
+                    }
+                />
+                <Route
+                    path="/placeBet/:matchId"
+                    element={
+                        <PrivateRoute>
+                            <PlaceBet />
                         </PrivateRoute>
                     }
                 />
