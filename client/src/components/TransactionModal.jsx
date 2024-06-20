@@ -5,15 +5,17 @@ import { useSelector } from 'react-redux';
 import Banks from './Banks';
 import Button from './Button';
 import Input from './Input';
+import RegisterBank from './RegisterBank';
 
-const TransactionModal = ({handleClose}) => {
+const TransactionModal = ({ handleClose }) => {
     const walletAmount = useSelector((state) => state.wallet.balance);
     const [transaction, setTransaction] = useState({
         amount: 0,
         deposit: true,
     });
+    const [addBank, setAddBank] = useState(false);
 
-    handleClose(() => setTransaction({amount: 0, deposit: true}));
+    handleClose(() => setTransaction({ amount: 0, deposit: true }));
 
     return (
         <div className="transactionModal">
@@ -65,6 +67,14 @@ const TransactionModal = ({handleClose}) => {
                 )}
             </form>
             {!transaction.deposit && <Banks />}
+            {!transaction.deposit && (
+                <Button
+                    onHit={() => setAddBank((prevState) => !prevState)}
+                >
+                    {addBank ? 'Close' : 'Add Bank'}
+                </Button>
+            )}
+            {addBank && <RegisterBank setAddBank={setAddBank}/>}
         </div>
     );
 };

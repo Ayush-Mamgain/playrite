@@ -5,7 +5,7 @@ import { selectBank } from '../features/bankSlice';
 const BankCard = ({bank}) => {
     return (
         <div className='bankCard'>
-            {bank.accountNumber}
+            {bank.bankName}
         </div>
     );
 }

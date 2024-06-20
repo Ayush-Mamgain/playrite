@@ -23,16 +23,26 @@ const App = () => {
                 const user = res.data;
                 dispatch(loginUser(user.token));
                 dispatch(setBalance(user.wallet));
-                dispatch(setUser({
-                    id: user._id,
-                    username: user.username,
-                    email: user.email,
-                    contact: user.contact
-                }));
+                dispatch(
+                    setUser({
+                        id: user._id,
+                        username: user.username,
+                        email: user.email,
+                        contact: user.contact,
+                    })
+                );
                 dispatch(setBank(res.data.banks));
-                dispatch(selectBank(res.data.banks.length != 0 ? res.data.banks[0]._id : null));
+                dispatch(
+                    selectBank(
+                        res.data.banks.length != 0
+                            ? res.data.banks[0]._id
+                            : null
+                    )
+                );
             })
-            .catch((error) => { console.error(error); dispatch(logoutUser())});
+            .catch((error) => {
+                dispatch(logoutUser());
+            });
     }, []);
 
     return (

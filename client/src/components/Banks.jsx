@@ -8,7 +8,6 @@ const Banks = () => {
     const banks = useSelector((state) => state.bank.banks);
     const selectedBankId = useSelector((state) => state.bank.selectedBankId);
     const dispatch = useDispatch();
-    console.log('Banks: ', banks);
     return (
         <div className="banks">
             <ul>

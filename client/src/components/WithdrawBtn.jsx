@@ -14,7 +14,6 @@ const WithdrawBtn = ({amount}) => {
     //the whole withdraw functionality can be done inside a custom hook (useWithdraw)
     const withdrawHandler = useCallback(async () => {
         const toastId = toast.loading('Withdrawal in progress...');
-        console.log('Selected bank id: ',bankId);
         setLoading(true);
         await withdraw({
             amount,

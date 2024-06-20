@@ -1,3 +1,4 @@
+//only for strings
 const resetForm = (formData, setFormData) => {
     const emptyFormData = Object.keys(formData).reduce((acc, key) => {
         acc[key] = '';
