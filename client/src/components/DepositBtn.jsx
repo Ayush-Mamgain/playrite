@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import {
     createDepositOrder,
     depositCallback,
+    depositErrorCallback,
 } from '../apiServices/transactionServices';
 import { useNavigate } from 'react-router-dom';
 import Button from './Button';
@@ -49,10 +50,10 @@ const DepositBtn = ({ amount }) => {
                         .then((res) => {
                             console.log(res);
                             toast.success('Deposit Successful');
-                            dispatch(incrementBalance(res.data.amount/100)); //amount will be in paisa
+                            dispatch(incrementBalance(res.data.amount / 100)); //amount will be in paisa
                             navigate('/');
                         })
-                        .catch((error) => toast.error(error.message))
+                        .catch((error) => toast.error(error.message)) //call deposit error callback
                         .finally(() => toast.dismiss(toastId));
                 },
 
@@ -77,6 +78,7 @@ const DepositBtn = ({ amount }) => {
                 //all error details are found in response.error object
                 console.log(response);
                 toast.error('Payment failed');
+                depositErrorCallback(response.error);
             });
             rzp.open();
         },

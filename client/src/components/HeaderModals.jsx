@@ -40,7 +40,7 @@ const HeaderModals = () => {
                 <LoginModal handleClose={setLoginClose}/>
             </Modal>
             <Modal
-                show={showModal.howRegister}
+                show={showModal.showRegister}
                 handleClose={() => {
                     dispatch(setShowRegister(false));
                     registerClose();

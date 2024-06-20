@@ -24,4 +24,12 @@ const depositCallback = (bodyData) => {
     })
 }
 
-export { createDepositOrder, withdraw, depositCallback };
+const depositErrorCallback = (bodyData) => {
+    return apiHandler({
+        method: 'post',
+        url: '/transaction/depositErrorCallback',
+        bodyData
+    })
+}
+
+export { createDepositOrder, withdraw, depositCallback, depositErrorCallback };

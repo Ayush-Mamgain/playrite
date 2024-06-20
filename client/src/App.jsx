@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getUserStatus } from './apiServices/userServices';
+import { getAllBanks, getUserStatus } from './apiServices/userServices';
 import { loginUser, logoutUser } from './features/authSlice';
 import { useDispatch } from 'react-redux';
 import Header from './components/Header';
@@ -11,6 +11,7 @@ import { Home, Profile, Bets, Transactions, Matches } from './pages';
 import NotFound from './pages/NotFound';
 import { setBalance } from './features/walletSlice';
 import { setUser } from './features/profileSlice';
+import { selectBank, setBank } from './features/bankSlice';
 
 const App = () => {
     const dispatch = useDispatch();
@@ -20,7 +21,6 @@ const App = () => {
         getUserStatus()
             .then((res) => {
                 const user = res.data;
-                console.log(user);
                 dispatch(loginUser(user.token));
                 dispatch(setBalance(user.wallet));
                 dispatch(setUser({
@@ -28,9 +28,11 @@ const App = () => {
                     username: user.username,
                     email: user.email,
                     contact: user.contact
-                }))
+                }));
+                dispatch(setBank(res.data.banks));
+                dispatch(selectBank(res.data.banks.length != 0 ? res.data.banks[0]._id : null));
             })
-            .catch((error) => dispatch(logoutUser()));
+            .catch((error) => { console.error(error); dispatch(logoutUser())});
     }, []);
 
     return (

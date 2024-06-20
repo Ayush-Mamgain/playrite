@@ -24,6 +24,7 @@ const OtpModal = ({formData, setFormData, setShowOtp}) => {
             .then((res) => {
                 console.log(res);
                 toast.success('OTP verified successfully');
+                console.log(formData);
                 register({...formData}).then((res) => {
                     console.log(res);
                     login({

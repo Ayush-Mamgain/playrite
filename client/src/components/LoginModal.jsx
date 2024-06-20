@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { setShowLogin, setShowRegister } from '../features/modalSlice';
 import { setBalance } from '../features/walletSlice';
 import resetForm from '../utils/resetForm';
+import { setUser } from '../features/profileSlice';
 
 const LoginModal = ({handleClose}) => {
     const dispatch = useDispatch();
@@ -26,8 +27,15 @@ const LoginModal = ({handleClose}) => {
 
     const loginSuccessHandler = (res) => {
         console.log(res);
+        const user = res.data;
         toast.success('Login successful');
         dispatch(loginUser(res.data.token));
+        dispatch(setUser({
+            id: user._id,
+            username: user.username,
+            email: user.email,
+            contact: user.contact
+        }));
         dispatch(setBalance(res.data.wallet));
         dispatch(setShowLogin(false));
         dispatch(setShowRegister(false));

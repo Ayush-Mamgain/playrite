@@ -2,16 +2,19 @@ import React, { useCallback, useState } from 'react';
 import Button from './Button';
 import toast from 'react-hot-toast';
 import { withdraw } from '../apiServices/transactionServices';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { decrementBalance } from '../features/walletSlice';
 
-const WithdrawBtn = ({amount, bankId}) => {
+const WithdrawBtn = ({amount}) => {
     const [loading, setLoading] = useState(false);
+    const bankId = useSelector(state => state.bank.selectedBankId);
+    console.log('Selected Bank ID:',bankId);
     const dispatch = useDispatch();
 
     //the whole withdraw functionality can be done inside a custom hook (useWithdraw)
     const withdrawHandler = useCallback(async () => {
         const toastId = toast.loading('Withdrawal in progress...');
+        console.log('Selected bank id: ',bankId);
         setLoading(true);
         await withdraw({
             amount,
@@ -30,7 +33,7 @@ const WithdrawBtn = ({amount, bankId}) => {
     }, [amount, bankId]);
 
     return (
-        <Button className='withdrawBtn' onHit={withdrawHandler} disabled={loading}>
+        <Button className='withdrawBtn' onHit={withdrawHandler} disabled={loading || !bankId}>
             Withdraw ₹{amount}
         </Button>
     );

@@ -1,9 +1,11 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { selectBank } from '../features/bankSlice';
 
-const BankCard = () => {
+const BankCard = ({bank}) => {
     return (
-        <div>
-            
+        <div className='bankCard'>
+            {bank.accountNumber}
         </div>
     );
 }

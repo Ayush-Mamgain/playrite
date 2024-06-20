@@ -1,8 +1,5 @@
 import apiHandler from '../axios/apiHandler';
 
-const BASE_URL = import.meta.env.VITE_API_URL;
-// const BASE_URL = `${import.meta.env.VITE_API_URL}/user;  --> less code
-
 const logout = async (bodyData) => {
     return apiHandler({
         method: 'post',
@@ -43,5 +40,13 @@ const getUserStatus = async (bodyData) => {
     })
 }
 
-export { logout, getUserInfo, getAllBets, getAllTransactions, getUserStatus };
+const getAllBanks = async (bodyData) => {
+    return apiHandler({
+        method: 'get',
+        url: '/user/getAllBanks',
+        bodyData
+    })
+}
+
+export { logout, getUserInfo, getAllBets, getAllTransactions, getUserStatus, getAllBanks };
 

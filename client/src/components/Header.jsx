@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Logo from './Logo';
 import UserLogo from './UserLogo';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,10 +7,6 @@ import Button from './Button';
 import Wallet from './Wallet';
 import NavMenu from './NavMenu';
 import CrossLogo from './CrossLogo';
-import Modal from './Modal';
-import RegisterModal from './RegisterModal';
-import LoginModal from './LoginModal';
-import TransactionModal from './TransactionModal';
 import {
     setShowLogin,
     setShowRegister,
@@ -18,12 +14,13 @@ import {
 } from '../features/modalSlice';
 import LogoutBtn from './LogoutBtn';
 import HeaderModals from './HeaderModals';
+import { getAllBanks } from '../apiServices/userServices';
+import { selectBank, setBank } from '../features/bankSlice';
+import toast from 'react-hot-toast';
 
 const Header = () => {
     const dispatch = useDispatch();
-
-    const auth = useSelector((state) => state.auth);
-    const authStatus = auth.status;
+    const authStatus = useSelector((state) => state.auth.status);
 
     const [navMenu, setNavMenu] = useState(false);
 
