@@ -68,6 +68,9 @@ const depositCallback = asyncHandler(async (req, res) => {
     
     //push the transaction in the user
     const updatedUser = await User.findByIdAndUpdate(req.user._id, {
+        $inc: {
+            wallet: paymentDetails.amount/100
+        },
         $push: {
             transactions: deposit._id
         }

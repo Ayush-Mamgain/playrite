@@ -218,7 +218,7 @@ const getUserStatus = asyncHandler(async (req, res) => {
     }
 
     //get the user from DB
-    const user = await User.findById(decodedToken._id).select('-password');
+    const user = await User.findById(decodedToken._id).select('-password').populate('banks').exec();
 
     //verify the token
     if (!user) {
@@ -245,18 +245,4 @@ const getUserStatus = asyncHandler(async (req, res) => {
     ));
 });
 
-const getAllBanks = asyncHandler(async (req, res) => {
-    const banks = await Bank.find({user: req.user._id});
-
-    if(!banks || banks.length == 0) {
-        throw new ApiError(400, 'No bank found')
-    }
-    
-    return res.status(200).json(new ApiResponse(
-        200,
-        banks,
-        'All user banks fetched successfully'
-    ));
-});
-
-module.exports = { registerUser, loginUser, logoutUser, getAllBets, getBattleStatus, getUserInfo, getAllTransactions, getUserStatus, getAllBanks };
+module.exports = { registerUser, loginUser, logoutUser, getAllBets, getBattleStatus, getUserInfo, getAllTransactions, getUserStatus };
