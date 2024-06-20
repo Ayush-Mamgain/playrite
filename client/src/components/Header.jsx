@@ -104,7 +104,7 @@ const Header = () => {
                         </li>
                     )}
                 </ul>
-                {navMenu && <NavMenu navMenuItems={navMenuItems} />}
+                {navMenu && <NavMenu navMenuItems={navMenuItems} setNavMenu={setNavMenu}/>}
                 <LogoutBtn />
             </nav>
 

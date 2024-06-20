@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from './Button';
 
-const NavMenu = ({ navMenuItems }) => {
+const NavMenu = ({ navMenuItems, setNavMenu }) => {
     const navigate = useNavigate();
     // const item = { --> structure for item
     //     id,
@@ -13,7 +13,7 @@ const NavMenu = ({ navMenuItems }) => {
         <div className="navMenu">
             <ul>
                 {navMenuItems.map((item) => (
-                    <li key={item.id || Date.now()}>
+                    <li key={item.id || Date.now()} onClick={() => setNavMenu(false)}>
                         <Link to={item.path}>{item.name}</Link>
                     </li>
                 ))}
