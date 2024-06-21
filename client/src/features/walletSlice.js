@@ -16,9 +16,12 @@ const walletSlice = createSlice({
         },
         decrementBalance: (state, action) => {
             state.balance -= action.payload;
+        },
+        updateBalance: (state, action) => {
+            state.balance += action.payload;
         }
     }
 });
 
-export const { incrementBalance, decrementBalance, setBalance } = walletSlice.actions;
+export const { incrementBalance, decrementBalance, setBalance, updateBalance } = walletSlice.actions;
 export default walletSlice.reducer;

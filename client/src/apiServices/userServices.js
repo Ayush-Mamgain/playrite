@@ -58,7 +58,7 @@ const getUserStats = async (bodyData) => {
 const getAllMatches = async (bodyData) => {
     return apiHandler({
         method: 'get',
-        url: '/user/getAllMatches'
+        url: '/user/getAllBattles'
     })
 }
 
