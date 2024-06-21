@@ -134,8 +134,8 @@ const settleBet = asyncHandler(async (req, res) => {
     //return successful response
     return res.status(200).json(new ApiResponse(
         204,
+        bet,
         'Bet settled successfully',
-        bet
     ));
 });
 module.exports = { placeBet, settleBet };
