@@ -37,6 +37,12 @@ const userSchema = new mongoose.Schema({
             ref: 'Bank'
         }
     ],
+    createdBattles: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Battle'
+        }
+    ],
     role: {
         type: String,
         enum: ['user', 'admin'],

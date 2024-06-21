@@ -1,5 +1,6 @@
 const Battle = require('../models/battle.model');
 const Player = require('../models/player.model');
+const User = require('../models/user.model');
 const ApiError = require('../utils/apiError');
 const ApiResponse = require('../utils/apiResponse');
 const asyncHandler = require('../utils/asyncHandler');
@@ -38,6 +39,11 @@ const createBattle = asyncHandler(async (req, res, next) => {
         });
     }
 
+    //push the battle in the organizers created battles
+    await User.findByIdAndUpdate(req.user._id, {
+        $push: { createdBattles: createdBattle._id }
+    });
+    
     // Return success response along with player name
     return res.status(200).json(new ApiResponse(
         201,
