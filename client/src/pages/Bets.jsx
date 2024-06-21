@@ -6,10 +6,8 @@ import BetCard from '../components/BetCard';
 
 const Bets = () => {
     const [bets, setBets] = useState([]);
-    const userId = useSelector((state) => state.profile.user._id);
 
     useEffect(() => {
-        console.log('User id:\n', userId);
         getAllBets()
             .then((res) => {
                 console.log(res);

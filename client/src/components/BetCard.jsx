@@ -9,7 +9,9 @@ const BetCard = ({ bet }) => {
     const dispatch = useDispatch();
 
     const [loading, setLoading] = useState(false);
-    const [disableBtn, setDisableBtn] = useState(bet.status !== 'active' || bet.battle.status !== 'over');
+    const [showBtn, setShowBtn] = useState(
+        bet.status === 'active' && bet.battle.status === 'over'
+    );
 
     const betSettle = () => {
         setLoading(true);
@@ -31,8 +33,8 @@ const BetCard = ({ bet }) => {
         <div className="betCard">
             {`${bet.battle.players[0].playerName} vs ${bet.battle.players[1].playerName}`}
             Match status: {bet.battle.status}
-            {bet.status === 'active' && bet.battle.status === 'over' && (
-                <Button onHit={betSettle} disabled={loading || disableBtn}>
+            {showBtn && (
+                <Button onHit={betSettle} disabled={loading}>
                     Settle Bet
                 </Button>
             )}

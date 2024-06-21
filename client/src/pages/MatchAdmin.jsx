@@ -24,6 +24,7 @@ const MatchAdmin = () => {
             .then((res) => {
                 console.log(res);
                 setMatchData(res.data);
+                setMatchStarted(res.data.status === 'active')
             })
             .catch((error) => toast.error(error.message))
             .finally(() => toast.dismiss(toastId));
