@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "../features/authSlice";
 import modalReducer from '../features/modalSlice';
 import walletReducer from "../features/walletSlice";
-import userReducer from '../features/profileSlice'
+import profileReducer from '../features/profileSlice'
 import bankReducer from '../features/bankSlice';
 
 const store = configureStore({
@@ -10,7 +10,7 @@ const store = configureStore({
         auth: authReducer,
         modal: modalReducer,
         wallet: walletReducer,
-        user: userReducer,
+        profile: profileReducer,
         bank: bankReducer
     }
 });

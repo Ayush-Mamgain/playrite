@@ -14,7 +14,7 @@ const DepositBtn = ({ amount }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
-    const user = useSelector((state) => state.user.user);
+    const user = useSelector((state) => state.profile.user);
 
     const createOrder = useCallback(async (amount) => {
         const toastId = toast.loading('Creating order...');

@@ -48,5 +48,12 @@ const getAllBanks = async (bodyData) => {
     })
 }
 
-export { logout, getUserInfo, getAllBets, getAllTransactions, getUserStatus, getAllBanks };
+const getUserStats = async (bodyData) => {
+    return apiHandler({
+        method: 'get',
+        url: '/user/getUserStats'
+    })
+}
+
+export { logout, getUserInfo, getAllBets, getAllTransactions, getUserStatus, getAllBanks, getUserStats };
 
