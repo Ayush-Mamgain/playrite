@@ -289,4 +289,19 @@ const getUserStats = asyncHandler(async (req, res) => {
     ));
 });
 
-module.exports = { registerUser, loginUser, logoutUser, getAllBets, getBattleStatus, getUserInfo, getAllTransactions, getUserStatus, getUserStats };
+const getAllBattles = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id);
+
+    //we can also populate the battles of user and then extract them
+    const createdBattles = await Battle.find({
+        _id: { $in: user.createdBattles }
+    }).populate('players');
+
+    return res.status(200).json(new ApiResponse(
+        200,
+        createdBattles,
+        'All battles fetched successfully'
+    ));
+})
+
+module.exports = { registerUser, loginUser, logoutUser, getAllBets, getBattleStatus, getUserInfo, getAllTransactions, getUserStatus, getUserStats, getAllBattles };
