@@ -8,4 +8,12 @@ const placeBet = async(bodyData) => {
     });
 }
 
-export { placeBet };
+const settleBet = async (bodyData) => {
+    return apiHandler({
+        method: 'patch',
+        url: '/bet/settleBet',
+        bodyData
+    })
+}
+
+export { placeBet, settleBet };
