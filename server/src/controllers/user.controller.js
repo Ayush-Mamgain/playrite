@@ -245,4 +245,48 @@ const getUserStatus = asyncHandler(async (req, res) => {
     ));
 });
 
-module.exports = { registerUser, loginUser, logoutUser, getAllBets, getBattleStatus, getUserInfo, getAllTransactions, getUserStatus };
+const getUserStats = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id).populate('bets');
+
+    if (!user) {
+        throw new ApiError(400, 'User not found');
+    }
+
+    let totalBets = 0; //total settled bets
+    let totalAmount = 0;
+    let totalWins = 0;
+    let totalLosses = 0;
+    let netProfit = 0;
+
+    user.bets.forEach(bet => {
+        if (bet.status === 'settled') {
+            ++totalBets;
+            const betAmount = bet.betAmount || 0;
+            const payout = bet.payout || 0;
+
+            totalAmount += betAmount;
+            const delta = payout - betAmount;
+            netProfit += delta;
+
+            if (delta < 0) {
+                totalLosses++;
+            } else if (delta > 0) {
+                totalWins++;
+            }
+        }
+    });
+
+    return res.status(200).json(new ApiResponse(
+        200,
+        {
+            totalBets,
+            totalAmount,
+            netProfit,
+            totalWins,
+            totalLosses
+        },
+        'User stats fetched successfully'
+    ));
+});
+
+module.exports = { registerUser, loginUser, logoutUser, getAllBets, getBattleStatus, getUserInfo, getAllTransactions, getUserStatus, getUserStats };
