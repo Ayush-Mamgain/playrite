@@ -14,19 +14,19 @@ const HeaderModals = () => {
     const dispatch = useDispatch();
     const showModal = useSelector(state => state.modal);
 
-    let loginClose;
-    let registerClose;
-    let transactionClose;
+    // let loginClose;
+    // let registerClose;
+    // let transactionClose;
 
-    function setLoginClose(func) {
-        loginClose = func;
-    }
-    function setRegisterClose(func) {
-        registerClose = func;
-    }
-    function setTransactionClose(func) {
-        transactionClose = func;
-    }
+    // function setLoginClose(func) {
+    //     loginClose = func;
+    // }
+    // function setRegisterClose(func) {
+    //     registerClose = func;
+    // }
+    // function setTransactionClose(func) {
+    //     transactionClose = func;
+    // }
 
     return (
         <div className='headerModals'>
@@ -34,29 +34,29 @@ const HeaderModals = () => {
                 show={showModal.showLogin}
                 handleClose={() => {
                     dispatch(setShowLogin(false));
-                    loginClose();
+                    // loginClose();
                 }}
             >
-                <LoginModal handleClose={setLoginClose}/>
+                <LoginModal />
             </Modal>
             <Modal
                 show={showModal.showRegister}
                 handleClose={() => {
                     dispatch(setShowRegister(false));
-                    registerClose();
+                    // registerClose();
                 }}
                     
             >
-                <RegisterModal handleClose={setRegisterClose}/>
+                <RegisterModal />
             </Modal>
             <Modal
                 show={showModal.showTransaction}
                 handleClose={() => {
                     dispatch(setShowTransaction(false));
-                    transactionClose();
+                    // transactionClose();
                 }}
             >
-                <TransactionModal handleClose={setTransactionClose}/>
+                <TransactionModal />
             </Modal>
         </div>
     );

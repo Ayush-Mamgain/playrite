@@ -23,11 +23,11 @@ const RegisterModal = ({handleClose}) => {
 
     const [loading, setLoading] = useState(false); //can loading be done globally through slice?
 
-    handleClose(() => resetForm(formData, setFormData)); //should this be put inside useEffec
+    // handleClose(() => resetForm(formData, setFormData)); //should this be put inside useEffect
 
     const submitHandler = (event) => {
         event.preventDefault();
-        const toastId = toast.loading('Loading');
+        const toastId = toast.loading('Sending OTP...');
         setLoading(true);
         const bodyData = { ...formData }; //cloning the formData because we don't want to send the state directly
         console.log(bodyData);

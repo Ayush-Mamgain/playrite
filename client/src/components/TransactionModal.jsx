@@ -15,7 +15,7 @@ const TransactionModal = ({ handleClose }) => {
     });
     const [addBank, setAddBank] = useState(false);
 
-    handleClose(() => setTransaction({ amount: 0, deposit: true }));
+    // handleClose(() => setTransaction({ amount: 0, deposit: true }));
 
     return (
         <div className="transactionModal">

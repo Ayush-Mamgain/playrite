@@ -23,7 +23,7 @@ const LoginModal = ({handleClose}) => {
 
     const [loading, setLoading] = useState(false); //can loading be done globally through slice?
 
-    handleClose(() => resetForm(formData, setFormData)); //should this be put inside useEffect?
+    // handleClose(() => resetForm(formData, setFormData)); //should this be put inside useEffect?
 
     const loginSuccessHandler = (res) => {
         console.log(res);
@@ -39,6 +39,7 @@ const LoginModal = ({handleClose}) => {
         dispatch(setBalance(res.data.wallet));
         dispatch(setShowLogin(false));
         dispatch(setShowRegister(false));
+        resetForm(formData, setFormData);
         navigate('/');
     };
 

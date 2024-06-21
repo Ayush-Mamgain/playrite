@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 
 const Transactions = () => {
     const [transactions, setTransactions] = useState([]);
-    const userId = useSelector((state) => state.user.user.id);
+    const userId = useSelector((state) => state.profile.user.id);
 
     useEffect(() => {
         console.log('User id:\n', userId);

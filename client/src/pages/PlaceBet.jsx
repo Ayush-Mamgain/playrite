@@ -5,8 +5,12 @@ import toast from 'react-hot-toast';
 import Input from '../components/Input';
 import { placeBet } from '../apiServices/betServices';
 import Button from '../components/Button';
+import { useDispatch } from 'react-redux';
+import { decrementBalance } from '../features/walletSlice';
 
 const PlaceBet = () => {
+    const dispatch = useDispatch();
+
     const { matchId } = useParams();
     const [matchData, setMatchData] = useState(null);
     const [formData, setFormData] = useState({
@@ -37,6 +41,7 @@ const PlaceBet = () => {
             .then((res) => {
                 console.log(res);
                 toast.success('Bet placed successfully');
+                dispatch(decrementBalance(formData.betAmount));
                 setFormData({
                     selectedPlayer: '',
                     betAmount: 0,

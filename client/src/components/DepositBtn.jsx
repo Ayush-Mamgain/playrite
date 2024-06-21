@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from './Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { incrementBalance } from '../features/walletSlice';
+import { setShowTransaction } from '../features/modalSlice';
 
 const DepositBtn = ({ amount }) => {
     const navigate = useNavigate();
@@ -90,7 +91,11 @@ const DepositBtn = ({ amount }) => {
             event.preventDefault();
             setLoading(true);
             await createOrder(amount)
-                .then((order) => initiatePayment(order))
+                .then((order) =>
+                    initiatePayment(order).then(() =>
+                        dispatch(setShowTransaction(false))
+                    )
+                )
                 .catch((error) => toast.error(error.message))
                 .finally(setLoading(false));
         },

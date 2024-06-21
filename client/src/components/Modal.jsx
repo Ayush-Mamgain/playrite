@@ -5,8 +5,9 @@ const Modal = ({ show, handleClose, children }) => {
         ? 'modal display-block'
         : 'modal display-none';
 
+    if(!show) return null;
     return (
-        <div className={showHideClassName} onClick={handleClose}>
+        <div className='modal' onClick={handleClose}>
             <section
                 className="modal-main"
                 onClick={(e) => e.stopPropagation()}
