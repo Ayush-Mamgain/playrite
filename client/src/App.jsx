@@ -15,12 +15,14 @@ import { selectBank, setBank } from './features/bankSlice';
 import OrganizeMatch from './pages/OrganizeMatch';
 import MatchAdmin from './pages/MatchAdmin';
 import PlaceBet from './pages/PlaceBet';
+import toast from 'react-hot-toast';
 
 const App = () => {
     const dispatch = useDispatch();
     // const [error, setError] = useState(false); --> for server errors --> navigate to a special error page
 
     useEffect(() => {
+        const toastId = toast.loading('Loading...');
         getUserStatus()
             .then((res) => {
                 const user = res.data;
@@ -42,10 +44,12 @@ const App = () => {
                             : null
                     )
                 );
+                localStorage.setItem('token', JSON.stringify(user.token))                
             })
             .catch((error) => {
                 dispatch(logoutUser());
-            });
+            })
+            .finally(() => toast.dismiss(toastId));
     }, []);
 
     return (

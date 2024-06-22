@@ -19,7 +19,7 @@ const BetCard = ({ bet }) => {
         settleBet({ betId: bet._id })
             .then((res) => {
                 console.log(res);
-                setDisableBtn(true);
+                setShowBtn(false);
                 dispatch(updateBalance(res.data.payout));
             })
             .catch((error) => toast.error(error.message))

@@ -30,6 +30,18 @@ const PlaceBet = () => {
             .finally(() => toast.dismiss(toastId));
     }, [matchId]);
 
+    const refreshMatch = () => {
+        const toastId = toast.loading('Loading...');
+        console.log(matchId);
+        getMatchDetails(matchId)
+            .then((res) => {
+                console.log(res);
+                setMatchData(res.data);
+            })
+            .catch((error) => toast.error(error.message))
+            .finally(() => toast.dismiss(toastId));
+    }
+
     const submitHandler = (event) => {
         event.preventDefault();
         const toastId = toast.loading('Placing bet...');
@@ -93,6 +105,7 @@ const PlaceBet = () => {
                     <Button>Place Bet</Button>
                 </form>
             )}
+            <Button onHit={refreshMatch}>Refresh Match status</Button>
         </div>
     );
 };

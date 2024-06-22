@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
-const token = localStorage.getItem('token');
+const token = JSON.parse(localStorage.getItem('token'));
 
 //same axios instance will be used to send multiple requests
 const axiosInstance = axios.create({
@@ -11,6 +11,8 @@ const axiosInstance = axios.create({
     headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS"
     },
 });
 
