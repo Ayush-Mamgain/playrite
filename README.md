@@ -10,7 +10,6 @@ Playrite is an innovative platform similar to Stake.com, designed for hassle-fre
 - [Usage](#usage)
 - [Project Improvements](#project-improvements)
 - [Contributing](#contributing)
-- [License](#license)
 - [Contact](#contact)
 
 ## Features
@@ -80,7 +79,7 @@ Playrite is an innovative platform similar to Stake.com, designed for hassle-fre
 
 ## Contributing
 
-We welcome contributions to enhance Playrite. Please follow these steps:
+The project has been made open source and available to public. We welcome contributions to enhance Playrite. Please follow these steps:
 
 1. Fork the repository.
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`).
@@ -88,15 +87,10 @@ We welcome contributions to enhance Playrite. Please follow these steps:
 4. Push to the branch (`git push origin feature/AmazingFeature`).
 5. Open a Pull Request.
 
-## License
-
-Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 
-- **Project Link**: [https://github.com/yourusername/playrite](https://github.com/yourusername/playrite)
-- **Email**: yourname@example.com
+- **Project Link**: [https://github.com/yourusername/playrite](https://github.com/ayush-mamgain/playrite)
+- **Email**: ayushmamgain1234@gmail.com
 
 ---
-
-*This README was generated with ❤️ by [Your Name](https://github.com/yourusername).*
